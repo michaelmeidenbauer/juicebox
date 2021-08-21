@@ -1,11 +1,13 @@
 const express = require('express');
+
 const apiRouter = express.Router();
+const jwt = require('jsonwebtoken');
 const postsRouter = require('./posts');
 const usersRouter = require('./users');
 const tagsRouter = require('./tags');
-const jwt = require('jsonwebtoken');
 const { getUserById } = require('../db');
 require('dotenv').config();
+
 const { JWT_SECRET } = process.env;
 
 // set `req.user` if possible
@@ -31,26 +33,24 @@ apiRouter.use(async (req, res, next) => {
   } else {
     next({
       name: 'AuthorizationHeaderError',
-      message: `Authorization token must start with ${ prefix }`
+      message: `Authorization token must start with ${prefix}`,
     });
   }
 });
 apiRouter.use((req, res, next) => {
-    if (req.user) {
-      console.log("User is set:", req.user);
-    }
-  
-    next();
-  });
+  if (req.user) {
+    console.log('User is set:', req.user);
+  }
+
+  next();
+});
 
 apiRouter.use('/users', usersRouter);
 apiRouter.use('/posts', postsRouter);
 apiRouter.use('/tags', tagsRouter);
 
-
-apiRouter.use((error, req, res, next) => {
-    res.send(error);
-  });
-
+apiRouter.use((error, req, res) => {
+  res.send(error);
+});
 
 module.exports = apiRouter;

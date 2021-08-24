@@ -1,13 +1,12 @@
 const express = require('express');
-
-const apiRouter = express.Router();
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const postsRouter = require('./posts');
 const usersRouter = require('./users');
 const tagsRouter = require('./tags');
 const { getUserById } = require('../db');
-require('dotenv').config();
 
+const apiRouter = express.Router();
 const { JWT_SECRET } = process.env;
 
 // set `req.user` if possible
